@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.giphy.R;
 
 public class GiphyView extends RecyclerView.ViewHolder {
@@ -25,6 +26,6 @@ public class GiphyView extends RecyclerView.ViewHolder {
     // =============================================================================================
 
     public void loadGif(String url) {
-        Glide.with(context).load(url).into(imageView);
+        Glide.with(context).asGif().load(url).into(imageView);
     }
 }

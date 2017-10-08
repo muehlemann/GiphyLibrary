@@ -16,13 +16,16 @@ public class GiphyPresenter {
     private GiphyApi giphyApi;
 
     public GiphyPresenter() {
-        retrofit = new Retrofit.Builder()
+        this.retrofit = getRetrofit();
+        this.giphyApi = retrofit.create(GiphyApi.class);
+    }
+
+    public Retrofit getRetrofit() {
+        return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
-
-        giphyApi = retrofit.create(GiphyApi.class);
     }
 
     // =============================================================================================

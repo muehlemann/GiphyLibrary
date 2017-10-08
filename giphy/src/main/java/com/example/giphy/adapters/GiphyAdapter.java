@@ -9,13 +9,11 @@ import android.view.ViewGroup;
 
 import com.example.giphy.R;
 import com.example.giphy.models.GIPHY;
-import com.example.giphy.network.GiphyApi;
 import com.example.giphy.presenters.GiphyPresenter;
 import com.example.giphy.views.GiphyView;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -27,7 +25,7 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.inflater  = LayoutInflater.from(context);
         this.presenter = new GiphyPresenter();
 
-        loadTrending();
+        this.loadTrending();
     }
 
     @Override
@@ -37,7 +35,6 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
         if (response != null) {
             GiphyView view = (GiphyView) holder;
             view.loadGif(response.getData().get(position).images.fixed_width.url);
@@ -52,6 +49,10 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         return 0;
     }
+
+    // =============================================================================================
+    // Internals
+    // =============================================================================================
 
     public void loadTrending() {
         Thread thread = new Thread(new Runnable(){
