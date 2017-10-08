@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.example.giphy.R;
+import com.example.giphy.models.GIPHY;
 import com.example.giphy.network.GiphyApi;
 import com.example.giphy.presenters.GiphyPresenter;
 import com.example.giphy.views.GiphyView;
@@ -18,13 +19,15 @@ import rx.functions.Action1;
 
 public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
     private LayoutInflater inflater;
     private GiphyPresenter presenter;
+    private GIPHY response;
 
     public GiphyAdapter(@NonNull Context context) {
-        this.context   = context;
         this.inflater  = LayoutInflater.from(context);
+        this.presenter = new GiphyPresenter();
+
+        loadTrending();
     }
 
     @Override
@@ -35,15 +38,50 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        GiphyView view = (GiphyView) holder;
-        view.loadGif("https://media.giphy.com/media/xT9IgNPVbGsa0Wd8li/giphy.gif");
-
+        if (response != null) {
+            GiphyView view = (GiphyView) holder;
+            view.loadGif(response.getData().get(position).images.fixed_width.url);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 50;
+        if (response != null) {
+            return response.getData().size();
+        }
+
+        return 0;
     }
 
+    public void loadTrending() {
+        Thread thread = new Thread(new Runnable(){
+            public void run() {
+
+                presenter.getTrending()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<GIPHY>() {
+
+                            @Override
+                            public void onNext(GIPHY response) {
+                                GiphyAdapter.this.response = response;
+                                GiphyAdapter.this.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.d("SHIT", "ERROR");
+                                e.printStackTrace();
+                            }
+                        });
+            }
+        });
+
+        thread.start();
+    }
 
 }

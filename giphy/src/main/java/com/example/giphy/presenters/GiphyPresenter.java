@@ -1,5 +1,6 @@
 package com.example.giphy.presenters;
 
+import com.example.giphy.models.GIPHY;
 import com.example.giphy.network.GiphyApi;
 
 import retrofit2.Retrofit;
@@ -28,7 +29,7 @@ public class GiphyPresenter {
     // Calls
     // =============================================================================================
 
-    public Observable<String> getTrending() {
+    public Observable<GIPHY> getTrending() {
         return giphyApi.getTrending();
     }
 }
