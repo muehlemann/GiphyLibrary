@@ -13,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Create an intent factory
+
         Intent intent = new Intent(this, GiphyActivity.class);
         startActivity(intent);
     }

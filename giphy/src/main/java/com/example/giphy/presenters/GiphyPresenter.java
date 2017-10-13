@@ -21,6 +21,9 @@ public class GiphyPresenter {
     }
 
     public Retrofit getRetrofit() {
+
+        // Write an interceptor like potato interceptor...
+
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

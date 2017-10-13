@@ -26,6 +26,9 @@ public class GiphyView extends RecyclerView.ViewHolder {
     // =============================================================================================
 
     public void loadGif(String url) {
+
+        // download each gif locally
+
         Glide.with(context).asGif().load(url).into(imageView);
     }
 }
