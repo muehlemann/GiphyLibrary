@@ -14,6 +14,10 @@ public class GiphyView extends RecyclerView.ViewHolder {
     private Context context;
     private AppCompatImageView imageView;
 
+    // =============================================================================================
+    // Constructor
+    // =============================================================================================
+
     public GiphyView(View itemView) {
         super(itemView);
 
