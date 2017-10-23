@@ -2,7 +2,9 @@ package com.example.giphy.presenters;
 
 import com.example.giphy.models.GIPHY;
 import com.example.giphy.network.GiphyApi;
+import com.example.giphy.network.GiphyInterceptor;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -15,20 +17,27 @@ public class GiphyPresenter {
     private Retrofit retrofit;
     private GiphyApi giphyApi;
 
-    public GiphyPresenter() {
-        this.retrofit = getRetrofit();
+    public GiphyPresenter(String apiKey) {
+        this.retrofit = getRetrofit(apiKey);
         this.giphyApi = retrofit.create(GiphyApi.class);
     }
 
-    public Retrofit getRetrofit() {
+    // =============================================================================================
+    // Retrofit Configurations
+    // =============================================================================================
 
-        // Write an interceptor like potato interceptor...
+    private Retrofit getRetrofit(String apiKey) {
 
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(getHttpClient(apiKey))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
+    }
+
+    private OkHttpClient getHttpClient(String apiKey) {
+        return new OkHttpClient.Builder().addInterceptor(new GiphyInterceptor(apiKey)).build();
     }
 
     // =============================================================================================
@@ -37,5 +46,9 @@ public class GiphyPresenter {
 
     public Observable<GIPHY> getTrending() {
         return giphyApi.getTrending();
+    }
+
+    public Observable<GIPHY> getSearch(String q) {
+        return giphyApi.getSearch(q);
     }
 }

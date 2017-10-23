@@ -3,7 +3,6 @@ package com.example.giphy.adapters;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -39,11 +38,11 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     // Constructor
     // =============================================================================================
 
-    public GiphyAdapter(@NonNull Context context) {
+    public GiphyAdapter(@NonNull Context context, String apiKey) {
         this.inflater  = LayoutInflater.from(context);
-        this.presenter = new GiphyPresenter();
+        this.presenter = new GiphyPresenter(apiKey);
 
-        this.loadTrending();
+        this.getTrending();q
     }
 
     @Override
@@ -117,7 +116,7 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.listener = listener;
     }
 
-    public void loadTrending() {
+    public void getTrending() {
         Thread thread = new Thread(new Runnable() {
             public void run() {
 
@@ -146,6 +145,38 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         });
 
         thread.start();
+    }
+
+    public void getSearch(final String q) {
+
+        Thread thread = new Thread(new Runnable() {
+            public void run() {
+                presenter.getSearch(q)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<GIPHY>() {
+
+                            @Override
+                            public void onNext(GIPHY response) {
+                                GiphyAdapter.this.response = response;
+                                GiphyAdapter.this.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.d("SHIT", "ERROR");
+                                e.printStackTrace();
+                            }
+                        });
+            }
+        });
+
+        thread.start();
+
     }
 
 }

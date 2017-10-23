@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.giphy.Interface.GiphyLibrary;
 import com.example.giphy.activities.GiphyActivity;
 import com.example.giphy.adapters.GiphyAdapter;
 
@@ -15,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startActivityForResult(GiphyActivity.start(this), GiphyActivity.REQUEST_CODE);
+        startActivityForResult(GiphyLibrary.start(this, "dc6zaTOxFJmzC"), GiphyLibrary.REQUEST_CODE);
     }
 
     @Override
@@ -23,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case GiphyActivity.REQUEST_CODE:
-                Log.d("Giphy: ", data.getStringExtra(GiphyActivity.GIPHY_URL));
+            case GiphyLibrary.REQUEST_CODE:
+                Log.d("Giphy: ", data.getStringExtra(GiphyLibrary.GIPHY_URL));
                 break;
             default:
                 break;
