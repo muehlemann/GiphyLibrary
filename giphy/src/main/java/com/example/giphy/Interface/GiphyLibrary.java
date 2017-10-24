@@ -7,9 +7,10 @@ import com.example.giphy.activities.GiphyActivity;
 
 public class GiphyLibrary {
 
-    public final static int REQUEST_CODE = 101;
     public final static String GIPHY_URL = "giphy_url";
     public final static String API_KEY = "api_key";
+    public final static int REQUEST_CODE = 1001;
+    public final static int PAGE_COUNT = 25;
 
     // =============================================================================================
     // Constructor

@@ -6,25 +6,69 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 
 import com.example.giphy.Interface.GiphyLibrary;
 import com.example.giphy.R;
 import com.example.giphy.adapters.GiphyAdapter;
+import com.example.giphy.models.GIPHY;
 import com.example.giphy.presenters.GiphyPresenter;
+import com.jakewharton.rxbinding.widget.RxTextView;
+
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Listener {
 
-    protected GiphyAdapter adapter;
-
+    protected AppCompatTextView done;
     protected AppCompatEditText editText;
     protected RecyclerView recyclerView;
+
+    protected GiphyPresenter presenter;
+    protected GiphyAdapter adapter;
+
+    protected Subscription editTextSubscription;
+    protected Subscription trendingSubscription;
+    protected Subscription searchSubscription;
+
+    private boolean loadMore;
+    private int offset;
+
+    private Observer<GIPHY> observer = new Observer<GIPHY>() {
+
+        @Override
+        public void onNext(GIPHY giphy) {
+
+            if (loadMore) {
+                adapter.response.appendData(giphy.getData());
+                offset += GiphyLibrary.PAGE_COUNT;
+            } else {
+                adapter.response = giphy;
+                offset = 0;
+            }
+
+            adapter.notifyDataSetChanged();
+            loadMore = false;
+        }
+
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable err) {
+
+        }
+
+    };
+
 
     // =============================================================================================
     // Constructor
@@ -35,38 +79,119 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_giphy);
 
+        // View Bindings
+        done          = (AppCompatTextView) findViewById(R.id.done);
         editText      = (AppCompatEditText) findViewById(R.id.edit_text);
         recyclerView  = (RecyclerView) findViewById(R.id.recycler_view);
 
-        String apiKey = getIntent().getStringExtra(GiphyLibrary.API_KEY);
-        adapter       = new GiphyAdapter(getContext(), apiKey);
+        // Presenter
+        presenter = new GiphyPresenter(getIntent().getStringExtra(GiphyLibrary.API_KEY));
 
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        recyclerView.addItemDecoration(new GiphyActivity.SpacesItemDecoration(32));
-        recyclerView.setAdapter(adapter);
-
+        // Adapter
+        adapter = new GiphyAdapter(getContext());
         adapter.setListener(this);
-        adapter.getTrending();
 
-
-
-
-        editText.addTextChangedListener(new TextWatcher()
-        {
+        // Recycler
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void afterTextChanged(Editable edit) {}
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                if (loadMore) {
+                    return;
+                }
 
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.getSearch(s.toString());
+                GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+
+                int visibleItems = layoutManager.getChildCount();
+                int totalItems   = layoutManager.getItemCount();
+                int pastItems    = layoutManager.findFirstVisibleItemPosition();
+
+                if ((visibleItems + pastItems) >= totalItems) {
+                    loadMore = true;
+                    loadMore();
+                }
             }
         });
 
+        // Set Up Views
+        setUpDone();
+        setUpEditText();
+
+        // Load Gifs
+        getTrending(0);
     }
 
     public Context getContext() {
         return getApplicationContext();
+    }
+
+    // =============================================================================================
+    // View Actions
+    // =============================================================================================
+
+    private void setUpDone() {
+
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
+    private void setUpEditText() {
+
+        if (editTextSubscription != null) {
+            editTextSubscription.unsubscribe();
+        }
+        editTextSubscription = RxTextView.textChanges(editText)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<CharSequence>() {
+                    @Override
+                    public void call(CharSequence charSequence) {
+                        getSearch(charSequence.toString(), 0);
+                    }
+                });
+    }
+
+
+    // =============================================================================================
+    // Methods
+    // =============================================================================================
+
+    private void loadMore() {
+
+        loadMore = true;
+        if (editText.getText().length() > 0) {
+            getSearch(editText.getText().toString(), offset);
+        } else {
+            getTrending(offset);
+        }
+    }
+
+    private void getTrending(int offset) {
+
+        if (trendingSubscription != null) {
+            trendingSubscription.unsubscribe();
+        }
+        trendingSubscription = presenter.getTrending(offset)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(observer);
+    }
+
+    private void getSearch(String query, int offset) {
+
+        if (searchSubscription != null) {
+            searchSubscription.unsubscribe();
+        }
+        searchSubscription = presenter.getSearch(query, offset)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(observer);
     }
 
     // =============================================================================================
@@ -80,37 +205,4 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         setResult(RESULT_OK, data);
         finish();
     }
-
-    // =============================================================================================
-    // SpacesItemDecoration
-    // =============================================================================================
-
-    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-        private final int space;
-        private final int spaceHalf;
-
-        SpacesItemDecoration(int space) {
-            this.space = space;
-            this.spaceHalf = space / 2;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-
-            if (parent.getPaddingLeft() != spaceHalf || parent.getPaddingRight() != spaceHalf) {
-                parent.setPadding(spaceHalf, 0, spaceHalf, 0);
-                parent.setClipToPadding(true);
-            }
-
-            outRect.top    = spaceHalf;
-            outRect.bottom = spaceHalf;
-            outRect.left   = spaceHalf;
-            outRect.right  = spaceHalf;
-
-            if (parent.getChildAdapterPosition(view) == 0 || parent.getChildAdapterPosition(view) == 1) {
-                outRect.top = space;
-            }
-        }
-    }
-
 }

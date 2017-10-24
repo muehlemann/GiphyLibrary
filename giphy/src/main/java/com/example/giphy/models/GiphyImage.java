@@ -1,12 +1,12 @@
 package com.example.giphy.models;
 
-public class GiphyImage{
+public class GiphyImage {
 
-    public class FixedWidth {
+    public class FixedHeight {
         public String url;
-        String width;
-        String height;
+        public int width;
+        public int height;
     }
 
-    public FixedWidth fixed_width;
+    public FixedHeight fixed_height;
 }

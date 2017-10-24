@@ -44,11 +44,11 @@ public class GiphyPresenter {
     // Calls
     // =============================================================================================
 
-    public Observable<GIPHY> getTrending() {
-        return giphyApi.getTrending();
+    public Observable<GIPHY> getTrending(int offset) {
+        return giphyApi.getTrending(offset);
     }
 
-    public Observable<GIPHY> getSearch(String q) {
-        return giphyApi.getSearch(q);
+    public Observable<GIPHY> getSearch(String query, int offset) {
+        return giphyApi.getSearch(query, offset);
     }
 }

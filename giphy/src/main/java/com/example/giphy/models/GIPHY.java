@@ -9,6 +9,10 @@ public class GIPHY {
     public ArrayList<Gif> getData(){
         return data;
     }
+
+    public void appendData(ArrayList<Gif> data) {
+        this.data.addAll(data);
+    }
 }
 
 

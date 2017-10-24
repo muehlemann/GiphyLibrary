@@ -9,8 +9,13 @@ import rx.Observable;
 public interface GiphyApi {
 
     @GET("/v1/gifs/trending")
-    Observable<GIPHY> getTrending();
+    Observable<GIPHY> getTrending(
+            @Query("offset") int offset
+    );
 
     @GET("/v1/gifs/search")
-    Observable<GIPHY> getSearch(@Query("q") String q);
+    Observable<GIPHY> getSearch(
+            @Query("q") String query,
+            @Query("offset") int offset
+    );
 }

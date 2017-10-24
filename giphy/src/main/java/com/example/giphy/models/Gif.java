@@ -1,6 +1,6 @@
 package com.example.giphy.models;
 
-public class Gif{
+public class Gif {
 
     public String type;
     public String id;

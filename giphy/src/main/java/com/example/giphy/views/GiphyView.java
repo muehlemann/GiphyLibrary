@@ -7,7 +7,10 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.giphy.R;
+import com.example.giphy.models.GiphyImage;
 
 public class GiphyView extends RecyclerView.ViewHolder {
 
@@ -29,10 +32,16 @@ public class GiphyView extends RecyclerView.ViewHolder {
     // Methods
     // =============================================================================================
 
-    public void loadGif(String url) {
+    public void loadGif(GiphyImage giphyImage) {
 
-        // download each gif locally
-
-        Glide.with(context).asGif().load(url).into(imageView);
+        Glide.with(context)
+                .load(giphyImage.fixed_height.url)
+                .apply(new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_error)
+                        .centerCrop())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
     }
 }
