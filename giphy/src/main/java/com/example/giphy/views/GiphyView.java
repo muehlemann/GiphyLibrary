@@ -18,8 +18,8 @@ import com.example.giphy.models.GiphyImage;
  */
 public class GiphyView extends RecyclerView.ViewHolder {
 
-    private Context context;
-    private AppCompatImageView imageView;
+    protected Context context;
+    protected AppCompatImageView imageView;
 
     // =============================================================================================
     // Constructor

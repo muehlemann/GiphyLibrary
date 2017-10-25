@@ -14,12 +14,14 @@ import com.example.giphy.Interface.GiphyLibrary;
 import com.example.giphy.activities.GiphyActivity;
 import com.example.giphy.adapters.GiphyAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GiphyLibrary.Listener {
 
     private final static String API_KEY = "dc6zaTOxFJmzC";
 
     public AppCompatImageView imageView;
     public AppCompatButton button;
+
+    public GiphyLibrary giphyLib;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(GiphyLibrary.start(MainActivity.this, API_KEY), GiphyLibrary.REQUEST_CODE);
+
+                giphyLib = new GiphyLibrary();
+                giphyLib.start(MainActivity.this, MainActivity.this, API_KEY);
             }
         });
     }
@@ -40,18 +44,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        giphyLib.onActivityResult(requestCode, resultCode, data);
+    }
 
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case GiphyLibrary.REQUEST_CODE:
-                    String url = data.getStringExtra(GiphyLibrary.GIPHY_URL);
-                    Log.d("GIF: ", url);
-                    Glide.with(MainActivity.this).load(url).into(imageView);
-                    break;
-                default:
-                    break;
-            }
-        }
-
+    @Override
+    public void onGiphySelected(String url) {
+        Log.d("GIF: ", url);
+        Glide.with(MainActivity.this).load(url).into(imageView);
     }
 }

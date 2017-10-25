@@ -42,10 +42,10 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
     protected Subscription trendingSubscription;
     protected Subscription searchSubscription;
 
-    private boolean loadMore;
-    private int offset;
+    protected boolean loadMore;
+    protected int offset;
 
-    private Observer<GIPHY> observer = new Observer<GIPHY>() {
+    protected Observer<GIPHY> observer = new Observer<GIPHY>() {
 
         @Override
         public void onNext(GIPHY giphy) {
@@ -84,9 +84,9 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         setContentView(R.layout.activity_giphy);
 
         // View Bindings
-        done          = (AppCompatTextView) findViewById(R.id.done);
-        editText      = (AppCompatEditText) findViewById(R.id.edit_text);
-        recyclerView  = (RecyclerView) findViewById(R.id.recycler_view);
+        done          = (AppCompatTextView) this.findViewById(R.id.done);
+        editText      = (AppCompatEditText) this.findViewById(R.id.edit_text);
+        recyclerView  = (RecyclerView) this.findViewById(R.id.recycler_view);
 
         // Presenter
         presenter = new GiphyPresenter(getIntent().getStringExtra(GiphyLibrary.API_KEY));

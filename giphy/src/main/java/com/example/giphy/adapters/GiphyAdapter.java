@@ -21,8 +21,8 @@ import com.example.giphy.views.GiphyView;
  */
 public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private LayoutInflater inflater;
-    private Listener listener;
+    protected LayoutInflater inflater;
+    protected Listener listener;
     public GIPHY response;
 
     // =============================================================================================
@@ -83,12 +83,12 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         @Override
                         public void onAnimationCancel(Animator animator) {
-
+                            // no-op
                         }
 
                         @Override
                         public void onAnimationRepeat(Animator animator) {
-
+                            // no-op
                         }
                     });
                     set.start();

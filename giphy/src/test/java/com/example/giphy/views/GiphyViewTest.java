@@ -1,33 +1,47 @@
 package com.example.giphy.views;
 
-import android.view.View;
+import android.support.v7.widget.AppCompatImageView;
+import android.widget.FrameLayout;
 
+import com.example.giphy.BuildConfig;
+import com.example.giphy.models.FixedHeight;
 import com.example.giphy.models.GiphyImage;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 
 /**
  * Created by muehlemann on 10/25/17.
  *
  */
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21, packageName = "com.example.giphy")
 public class GiphyViewTest {
 
     private GiphyView view;
 
     @Before
     public void setUp() {
-        View itemView = mock(View.class);
-        view = new GiphyView(itemView);
+
+        view = new GiphyView(new FrameLayout(RuntimeEnvironment.application));
+        view.imageView = new AppCompatImageView(RuntimeEnvironment.application);
     }
 
     @Test
     public void testLoadGif() {
 
-        view.loadGif(spy(GiphyImage.class));
+        FixedHeight fixedHeight = new FixedHeight();
+        fixedHeight.url = "url";
+
+        GiphyImage giphyImage = new GiphyImage();
+        giphyImage.fixed_height = fixedHeight;
+
+        view.loadGif(giphyImage);
     }
 
 }

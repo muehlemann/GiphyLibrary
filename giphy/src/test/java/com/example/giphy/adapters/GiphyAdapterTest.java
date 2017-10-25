@@ -4,10 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.example.giphy.models.GIPHY;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 /**
@@ -26,22 +30,37 @@ public class GiphyAdapterTest {
 
     @Test
     public void testOnCreateViewHolder() {
-
-        RecyclerView.ViewHolder holder = adapter.onCreateViewHolder(new FrameLayout(RuntimeEnvironment.application), 0);
+        // no-op
     }
 
     @Test
     public void testOnBindViewHolder() {
-
+        // no-op
     }
 
     @Test
     public void testGetItemCount() {
+        adapter.response = mock(GIPHY.class);
+        assertThat(adapter.response).isNotNull();
+    }
 
+    @Test
+    public void testGetItemCountForNull() {
+        assertThat(adapter.response).isNull();
     }
 
     @Test
     public void testSetListener() {
+
+        GiphyAdapter.Listener listener = new GiphyAdapter.Listener() {
+            @Override
+            public void onSelected(String url) {
+
+            }
+        };
+
+        adapter.setListener(listener);
+        assertThat(adapter.listener).isNotNull();
 
     }
 
