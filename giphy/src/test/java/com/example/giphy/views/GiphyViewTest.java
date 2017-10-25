@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 /**
  * Created by muehlemann on 10/25/17.
@@ -26,7 +27,7 @@ public class GiphyViewTest {
     @Test
     public void testLoadGif() {
 
-        view.loadGif(mock(GiphyImage.class));
+        view.loadGif(spy(GiphyImage.class));
     }
 
 }

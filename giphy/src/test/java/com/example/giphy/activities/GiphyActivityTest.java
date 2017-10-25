@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
@@ -18,7 +17,6 @@ import static org.robolectric.Robolectric.buildActivity;
  *
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE)
 public class GiphyActivityTest {
 
     @Rule
@@ -27,9 +25,9 @@ public class GiphyActivityTest {
     public GiphyActivity activity;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
-        activity = buildActivity(GiphyActivity.class).create().start().resume().visible().get();
+        activity = buildActivity(GiphyActivity.class).create().get();
     }
 
     @Test
@@ -37,6 +35,35 @@ public class GiphyActivityTest {
         activity.setUpDone();
 
         assertThat(activity.done.hasOnClickListeners()).isTrue();
+    }
+
+    @Test
+    public void testSetUpEditText() {
+        activity.setUpEditText();
+
+    }
+
+    @Test
+    public void testLoadMore() {
+        activity.loadMore();
+
+    }
+
+    @Test
+    public void testGetTrending() {
+        activity.getTrending(0);
+    }
+
+    @Test
+    public void testGetSearch() {
+        activity.getSearch("query", 0);
+
+    }
+
+    @Test
+    public void testOnSelected() {
+        activity.onSelected("url");
+
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.giphy.adapters;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +27,22 @@ public class GiphyAdapterTest {
     @Test
     public void testOnCreateViewHolder() {
 
-        adapter.onCreateViewHolder(spy(ViewGroup.class), 0);
+        RecyclerView.ViewHolder holder = adapter.onCreateViewHolder(new FrameLayout(RuntimeEnvironment.application), 0);
+    }
+
+    @Test
+    public void testOnBindViewHolder() {
+
+    }
+
+    @Test
+    public void testGetItemCount() {
+
+    }
+
+    @Test
+    public void testSetListener() {
+
     }
 
 }
