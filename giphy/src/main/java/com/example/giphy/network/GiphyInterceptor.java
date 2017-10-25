@@ -11,7 +11,6 @@ import okhttp3.Response;
  * Created by muehlemann on 10/23/17.
  *
  */
-
 public class GiphyInterceptor implements Interceptor {
 
     private String apiKey;

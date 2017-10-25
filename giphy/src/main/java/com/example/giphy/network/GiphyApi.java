@@ -6,6 +6,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
 
+/**
+ * Created by muehlemann on 10/17/17.
+ *
+ */
 public interface GiphyApi {
 
     @GET("/v1/gifs/trending")

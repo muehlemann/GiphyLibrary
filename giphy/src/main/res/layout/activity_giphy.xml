@@ -42,6 +42,7 @@
             android:layout_below="@+id/navigation_bar"
             android:layout_marginTop="10dp"
             android:background="@drawable/background_edit_text"
+            android:textCursorDrawable="@null"
             android:maxLines="1"
             android:padding="5dp"
             android:textSize="14sp"

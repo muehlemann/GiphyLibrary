@@ -2,14 +2,15 @@ package com.example.giphy.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.giphy.Interface.GiphyLibrary;
 import com.example.giphy.R;
@@ -24,6 +25,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+/**
+ * Created by muehlemann on 10/17/17.
+ *
+ */
 public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Listener {
 
     protected AppCompatTextView done;
@@ -59,23 +64,22 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
 
         @Override
         public void onCompleted() {
-
+            // no-op
         }
 
         @Override
         public void onError(Throwable err) {
-
+            // no-op
         }
 
     };
-
 
     // =============================================================================================
     // Constructor
     // =============================================================================================
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_giphy);
 
@@ -99,12 +103,12 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+                // Load More Items
                 if (loadMore) {
                     return;
                 }
 
                 GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-
                 int visibleItems = layoutManager.getChildCount();
                 int totalItems   = layoutManager.getItemCount();
                 int pastItems    = layoutManager.findFirstVisibleItemPosition();
@@ -113,6 +117,16 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
                     loadMore = true;
                     loadMore();
                 }
+            }
+        });
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                // Dismiss Keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                return false;
             }
         });
 
@@ -124,7 +138,7 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         getTrending(0);
     }
 
-    public Context getContext() {
+    protected Context getContext() {
         return getApplicationContext();
     }
 
@@ -132,17 +146,18 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
     // View Actions
     // =============================================================================================
 
-    private void setUpDone() {
+    protected void setUpDone() {
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setResult(RESULT_CANCELED);
                 finish();
             }
         });
     }
 
-    private void setUpEditText() {
+    protected void setUpEditText() {
 
         if (editTextSubscription != null) {
             editTextSubscription.unsubscribe();
@@ -152,6 +167,7 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
                 .subscribe(new Action1<CharSequence>() {
                     @Override
                     public void call(CharSequence charSequence) {
+                        recyclerView.smoothScrollToPosition(0);
                         getSearch(charSequence.toString(), 0);
                     }
                 });
@@ -162,7 +178,7 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
     // Methods
     // =============================================================================================
 
-    private void loadMore() {
+    protected void loadMore() {
 
         loadMore = true;
         if (editText.getText().length() > 0) {
@@ -172,7 +188,7 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         }
     }
 
-    private void getTrending(int offset) {
+    protected void getTrending(int offset) {
 
         if (trendingSubscription != null) {
             trendingSubscription.unsubscribe();
@@ -183,7 +199,7 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
                 .subscribe(observer);
     }
 
-    private void getSearch(String query, int offset) {
+    protected void getSearch(String query, int offset) {
 
         if (searchSubscription != null) {
             searchSubscription.unsubscribe();

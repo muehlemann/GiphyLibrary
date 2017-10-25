@@ -5,6 +5,10 @@ import android.content.Intent;
 
 import com.example.giphy.activities.GiphyActivity;
 
+/**
+ * Created by muehlemann on 10/17/17.
+ *
+ */
 public class GiphyLibrary {
 
     public final static String GIPHY_URL = "giphy_url";

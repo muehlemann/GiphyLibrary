@@ -10,6 +10,10 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 
+/**
+ * Created by muehlemann on 10/18/17.
+ *
+ */
 public class GiphyPresenter {
 
     private static final String BASE_URL = "https://api.giphy.com";

@@ -15,12 +15,15 @@ import com.example.giphy.models.GIPHY;
 import com.example.giphy.models.GiphyImage;
 import com.example.giphy.views.GiphyView;
 
+/**
+ * Created by muehlemann on 10/17/17.
+ *
+ */
 public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private LayoutInflater inflater;
     private Listener listener;
     public GIPHY response;
-
 
     // =============================================================================================
     // Interface
@@ -35,7 +38,7 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     // =============================================================================================
 
     public GiphyAdapter(@NonNull Context context) {
-        this.inflater  = LayoutInflater.from(context);
+        this.inflater = LayoutInflater.from(context);
     }
 
     @Override

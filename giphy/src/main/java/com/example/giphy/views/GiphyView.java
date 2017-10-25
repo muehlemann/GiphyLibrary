@@ -12,6 +12,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.giphy.R;
 import com.example.giphy.models.GiphyImage;
 
+/**
+ * Created by muehlemann on 10/16/17.
+ *
+ */
 public class GiphyView extends RecyclerView.ViewHolder {
 
     private Context context;
