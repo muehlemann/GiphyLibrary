@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.example.giphy.GiphyLibrary;
+import com.muehlemann.giphy.GiphyLibrary;
 
 public class MainActivity extends AppCompatActivity implements GiphyLibrary.Listener {
 

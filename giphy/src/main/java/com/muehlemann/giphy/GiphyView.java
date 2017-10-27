@@ -11,7 +11,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.giphy.R;
 
-class GiphyView extends RecyclerView.ViewHolder {
+public final class GiphyView extends RecyclerView.ViewHolder {
 
     Context context;
     AppCompatImageView imageView;
