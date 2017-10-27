@@ -1,4 +1,4 @@
-package com.example.giphy;
+package com.muehlemann.giphy;
 
 import android.app.Activity;
 import android.content.Intent;

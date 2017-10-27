@@ -1,4 +1,4 @@
-package com.example.giphy;
+package com.muehlemann.giphy;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.giphy.R;
 
 class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

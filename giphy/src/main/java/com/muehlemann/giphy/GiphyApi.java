@@ -1,4 +1,4 @@
-package com.example.giphy;
+package com.muehlemann.giphy;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;

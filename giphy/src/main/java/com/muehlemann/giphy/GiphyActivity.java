@@ -1,4 +1,4 @@
-package com.example.giphy;
+package com.muehlemann.giphy;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.giphy.R;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import java.util.concurrent.ExecutorService;

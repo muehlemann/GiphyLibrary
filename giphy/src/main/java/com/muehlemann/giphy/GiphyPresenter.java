@@ -1,4 +1,4 @@
-package com.example.giphy;
+package com.muehlemann.giphy;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;

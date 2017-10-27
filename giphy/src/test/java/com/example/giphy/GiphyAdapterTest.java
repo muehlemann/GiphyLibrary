@@ -1,8 +1,5 @@
 package com.example.giphy;
 
-import com.example.giphy.GiphyAdapter;
-import com.example.giphy.GIPHY;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;

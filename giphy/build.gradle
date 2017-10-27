@@ -1,4 +1,9 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "com.jfrog.bintray"
+
+// This is the library version used when deploying the artifact
+version = "1.0.0"
 
 android {
     compileSdkVersion 26
@@ -56,4 +61,79 @@ dependencies {
     }
 
     testCompile 'junit:junit:4.12'
+}
+
+def siteUrl = 'https://github.com/muehlemann/GiphyLibrary'      // Homepage URL of the library
+def gitUrl = 'https://github.com/muehlemann/GiphyLibrary.git'   // Git repository URL
+group = "com.muehlemann"                                        // Maven Group ID for the artifact
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                // Add your description here
+                name 'com.muehlemann.giphy:giphylibrary'
+                description = 'GiphyLibrary picker for android'
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name 'MIT Lisence'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'muehlemann'
+                        name 'Matt Muehlemann'
+                        email 'matt.muehlemann@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+// https://github.com/bintray/gradle-bintray-plugin
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        // it is the name that appears in bintray when logged
+        name = "com.muehlemann.giphy:giphylibrary"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["MIT"]
+        publish = true
+        version {
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = properties.getProperty("bintray.gpg.password") //Optional. The passphrase for GPG signing'
+            }
+        }
+    }
 }

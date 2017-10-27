@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.giphy.GiphyLibrary;
-
 import org.junit.Before;
 import org.junit.Test;
 
