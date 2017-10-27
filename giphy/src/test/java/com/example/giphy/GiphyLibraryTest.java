@@ -1,12 +1,13 @@
-package com.example.giphy.Interface;
+package com.example.giphy;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.giphy.GiphyLibrary;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.robolectric.RuntimeEnvironment;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 

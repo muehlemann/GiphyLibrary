@@ -4,15 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.example.giphy.Interface.GiphyLibrary;
-import com.example.giphy.activities.GiphyActivity;
-import com.example.giphy.adapters.GiphyAdapter;
+import com.example.giphy.GiphyLibrary;
 
 public class MainActivity extends AppCompatActivity implements GiphyLibrary.Listener {
 

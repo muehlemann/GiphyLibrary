@@ -1,4 +1,6 @@
-package com.example.giphy.presenters;
+package com.example.giphy;
+
+import com.example.giphy.GiphyPresenter;
 
 import org.junit.Before;
 import org.junit.Test;

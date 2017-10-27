@@ -1,11 +1,7 @@
-package com.example.giphy.views;
+package com.example.giphy;
 
 import android.support.v7.widget.AppCompatImageView;
 import android.widget.FrameLayout;
-
-import com.example.giphy.BuildConfig;
-import com.example.giphy.models.FixedHeight;
-import com.example.giphy.models.GiphyImage;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-
 
 /**
  * Created by muehlemann on 10/25/17.
@@ -35,13 +30,11 @@ public class GiphyViewTest {
     @Test
     public void testLoadGif() {
 
-        FixedHeight fixedHeight = new FixedHeight();
-        fixedHeight.url = "url";
-
-        GiphyImage giphyImage = new GiphyImage();
-        giphyImage.fixed_height = fixedHeight;
-
-        view.loadGif(giphyImage);
+        Gif gif = new Gif();
+        gif.images = new Gif.GiphyImage();
+        gif.images.fixed_height_small = new Gif.Container();
+        gif.images.fixed_height_small.url = "url";
+        view.loadGif(gif);
     }
 
 }

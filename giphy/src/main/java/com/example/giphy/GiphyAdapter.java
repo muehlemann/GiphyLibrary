@@ -1,4 +1,4 @@
-package com.example.giphy.adapters;
+package com.example.giphy;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -10,26 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.giphy.R;
-import com.example.giphy.models.GIPHY;
-import com.example.giphy.models.GiphyImage;
-import com.example.giphy.views.GiphyView;
+class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-/**
- * Created by muehlemann on 10/17/17.
- *
- */
-public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    protected LayoutInflater inflater;
-    protected Listener listener;
-    public GIPHY response;
+    LayoutInflater inflater;
+    Listener listener;
+    GIPHY response;
 
     // =============================================================================================
     // Interface
     // =============================================================================================
 
-    public interface Listener {
+    interface Listener {
         void onSelected(String url);
     }
 
@@ -37,9 +28,13 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     // Constructor
     // =============================================================================================
 
-    public GiphyAdapter(@NonNull Context context) {
+    GiphyAdapter(@NonNull Context context) {
         this.inflater = LayoutInflater.from(context);
     }
+
+    // =============================================================================================
+    // Life Cycle
+    // =============================================================================================
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -50,10 +45,10 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (response != null) {
 
-            final GiphyImage giphyImg = response.getData().get(position).images;
+            final Gif gif = response.getData(position);
 
             GiphyView view = (GiphyView) holder;
-            view.loadGif(giphyImg);
+            view.loadGif(gif);
             view.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -77,7 +72,7 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         @Override
                         public void onAnimationEnd(Animator animator) {
                             if (listener != null) {
-                                listener.onSelected(giphyImg.fixed_height.url);
+                                listener.onSelected(gif.getUrl());
                             }
                         }
 
@@ -108,7 +103,19 @@ public class GiphyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return 0;
     }
 
-    public void setListener(Listener listener) {
+    // =============================================================================================
+    // Methods
+    // =============================================================================================
+
+    void setResponse(GIPHY response) {
+        this.response = response;
+    }
+
+    void appendResponse(GIPHY response) {
+        this.response.appendData(response.getData());
+    }
+
+    void setListener(Listener listener) {
         this.listener = listener;
     }
 

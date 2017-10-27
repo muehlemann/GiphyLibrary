@@ -1,16 +1,9 @@
-package com.example.giphy.Interface;
+package com.example.giphy;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.giphy.activities.GiphyActivity;
-
-/**
- * Created by muehlemann on 10/17/17.
- *
- */
 public class GiphyLibrary extends AppCompatActivity {
 
     public final static String GIPHY_URL = "giphy_url";
@@ -26,14 +19,6 @@ public class GiphyLibrary extends AppCompatActivity {
 
     public interface Listener {
         void onGiphySelected(String url);
-    }
-
-    // =============================================================================================
-    // Constructor
-    // =============================================================================================
-
-    public GiphyLibrary() {
-
     }
 
     // =============================================================================================

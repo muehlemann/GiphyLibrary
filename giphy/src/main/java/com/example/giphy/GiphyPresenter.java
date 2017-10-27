@@ -1,8 +1,4 @@
-package com.example.giphy.presenters;
-
-import com.example.giphy.models.GIPHY;
-import com.example.giphy.network.GiphyApi;
-import com.example.giphy.network.GiphyInterceptor;
+package com.example.giphy;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -10,18 +6,14 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 
-/**
- * Created by muehlemann on 10/18/17.
- *
- */
-public class GiphyPresenter {
+class GiphyPresenter {
 
     private static final String BASE_URL = "https://api.giphy.com";
 
     private Retrofit retrofit;
     private GiphyApi giphyApi;
 
-    public GiphyPresenter(String apiKey) {
+    GiphyPresenter(String apiKey) {
         this.retrofit = getRetrofit(apiKey);
         this.giphyApi = retrofit.create(GiphyApi.class);
     }
@@ -48,11 +40,11 @@ public class GiphyPresenter {
     // Calls
     // =============================================================================================
 
-    public Observable<GIPHY> getTrending(int offset) {
+    Observable<GIPHY> getTrending(int offset) {
         return giphyApi.getTrending(offset);
     }
 
-    public Observable<GIPHY> getSearch(String query, int offset) {
+    Observable<GIPHY> getSearch(String query, int offset) {
         return giphyApi.getSearch(query, offset);
     }
 }

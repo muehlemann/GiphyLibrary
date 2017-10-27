@@ -1,4 +1,4 @@
-package com.example.giphy.network;
+package com.example.giphy;
 
 import java.io.IOException;
 
@@ -7,15 +7,11 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Created by muehlemann on 10/23/17.
- *
- */
-public class GiphyInterceptor implements Interceptor {
+class GiphyInterceptor implements Interceptor {
 
     private String apiKey;
 
-    public GiphyInterceptor(String apiKey) {
+    GiphyInterceptor(String apiKey) {
         this.apiKey = apiKey;
     }
 

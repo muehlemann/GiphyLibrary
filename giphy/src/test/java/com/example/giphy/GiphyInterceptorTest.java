@@ -1,6 +1,4 @@
-package com.example.giphy.network;
-
-import com.example.giphy.builders.ChainBuilder;
+package com.example.giphy;
 
 import org.junit.Before;
 import org.junit.Test;

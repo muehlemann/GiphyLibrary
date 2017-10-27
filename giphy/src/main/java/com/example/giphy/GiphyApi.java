@@ -1,16 +1,10 @@
-package com.example.giphy.network;
-
-import com.example.giphy.models.GIPHY;
+package com.example.giphy;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
 
-/**
- * Created by muehlemann on 10/17/17.
- *
- */
-public interface GiphyApi {
+interface GiphyApi {
 
     @GET("/v1/gifs/trending")
     Observable<GIPHY> getTrending(

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.giphy.activities.GiphyActivity">
+    tools:context="com.example.giphy.GiphyActivity">
 
     <RelativeLayout
         android:id="@+id/navigation_container"
@@ -43,7 +43,9 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/background_edit_text"
             android:textCursorDrawable="@null"
+            android:imeOptions="actionDone"
             android:maxLines="1"
+            android:inputType="text"
             android:padding="5dp"
             android:textSize="14sp"
             android:hint="Search Giphy"/>

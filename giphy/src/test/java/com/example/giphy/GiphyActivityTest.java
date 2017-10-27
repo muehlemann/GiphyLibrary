@@ -1,9 +1,4 @@
-package com.example.giphy.activities;
-
-import android.app.Activity;
-
-import com.example.giphy.BuildConfig;
-import com.example.giphy.helper.RxSchedulersOverrideRule;
+package com.example.giphy;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,7 +41,6 @@ public class GiphyActivityTest {
     public void testSetUpEditText() {
         activity.setUpEditText();
         assertThat(activity.editTextSubscription).isNotNull();
-
     }
 
     @Test
@@ -65,6 +59,11 @@ public class GiphyActivityTest {
     public void testGetSearch() {
         activity.getSearch("query", 0);
         assertThat(activity.searchSubscription).isNotNull();
+    }
+
+    @Test
+    public void testCache() {
+        // no-op
     }
 
     @Test

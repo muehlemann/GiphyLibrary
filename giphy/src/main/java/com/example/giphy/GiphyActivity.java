@@ -1,4 +1,4 @@
-package com.example.giphy.activities;
+package com.example.giphy;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +12,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.example.giphy.Interface.GiphyLibrary;
-import com.example.giphy.R;
-import com.example.giphy.adapters.GiphyAdapter;
-import com.example.giphy.models.GIPHY;
-import com.example.giphy.presenters.GiphyPresenter;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.jakewharton.rxbinding.widget.RxTextView;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import rx.Observer;
 import rx.Subscription;
@@ -25,36 +27,42 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by muehlemann on 10/17/17.
- *
- */
-public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Listener {
+class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Listener {
 
-    protected AppCompatTextView done;
-    protected AppCompatEditText editText;
-    protected RecyclerView recyclerView;
+    AppCompatTextView done;
+    AppCompatEditText editText;
+    RecyclerView recyclerView;
 
-    protected GiphyPresenter presenter;
-    protected GiphyAdapter adapter;
+    GiphyPresenter presenter;
+    GiphyAdapter adapter;
 
-    protected Subscription editTextSubscription;
-    protected Subscription trendingSubscription;
-    protected Subscription searchSubscription;
+    ExecutorService cacheExecutor;
+    Subscription editTextSubscription;
+    Subscription trendingSubscription;
+    Subscription searchSubscription;
 
-    protected boolean loadMore;
-    protected int offset;
+    boolean loadMore;
+    int offset;
 
-    protected Observer<GIPHY> observer = new Observer<GIPHY>() {
+    Observer<GIPHY> observer = new Observer<GIPHY>() {
 
         @Override
-        public void onNext(GIPHY giphy) {
+        public void onNext(final GIPHY giphy) {
 
+            // Caching Strategy
+            cacheExecutor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    cache(giphy);
+                }
+            });
+
+            // Adapter Changes
             if (loadMore) {
-                adapter.response.appendData(giphy.getData());
+                adapter.appendResponse(giphy);
                 offset += GiphyLibrary.PAGE_COUNT;
             } else {
-                adapter.response = giphy;
+                adapter.setResponse(giphy);
                 offset = 0;
             }
 
@@ -79,7 +87,7 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
     // =============================================================================================
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_giphy);
 
@@ -87,6 +95,9 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         done          = (AppCompatTextView) this.findViewById(R.id.done);
         editText      = (AppCompatEditText) this.findViewById(R.id.edit_text);
         recyclerView  = (RecyclerView) this.findViewById(R.id.recycler_view);
+
+        // Executor
+        cacheExecutor = Executors.newFixedThreadPool(1);
 
         // Presenter
         presenter = new GiphyPresenter(getIntent().getStringExtra(GiphyLibrary.API_KEY));
@@ -122,10 +133,8 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-
                 // Dismiss Keyboard
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                dismissKeyboard();
                 return false;
             }
         });
@@ -138,8 +147,16 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         getTrending(0);
     }
 
-    protected Context getContext() {
-        return getApplicationContext();
+    // =============================================================================================
+    // GiphyAdapter.Listener
+    // =============================================================================================
+
+    @Override
+    public void onSelected(String url) {
+        Intent data = new Intent();
+        data.putExtra(GiphyLibrary.GIPHY_URL, url);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     // =============================================================================================
@@ -167,8 +184,16 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
                 .subscribe(new Action1<CharSequence>() {
                     @Override
                     public void call(CharSequence charSequence) {
-                        recyclerView.smoothScrollToPosition(0);
-                        getSearch(charSequence.toString(), 0);
+
+                        String query = charSequence.toString();
+
+                        if (query.equals("")) {
+                            recyclerView.smoothScrollToPosition(0);
+                            getTrending(0);
+                        } else {
+                            recyclerView.smoothScrollToPosition(0);
+                            getSearch(query, 0);
+                        }
                     }
                 });
     }
@@ -177,6 +202,15 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
     // =============================================================================================
     // Methods
     // =============================================================================================
+
+    protected Context getContext() {
+        return getApplicationContext();
+    }
+
+    protected void dismissKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
 
     protected void loadMore() {
 
@@ -195,7 +229,7 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         }
         trendingSubscription = presenter.getTrending(offset)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .subscribe(observer);
     }
 
@@ -206,19 +240,19 @@ public class GiphyActivity extends AppCompatActivity implements GiphyAdapter.Lis
         }
         searchSubscription = presenter.getSearch(query, offset)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .subscribe(observer);
     }
 
-    // =============================================================================================
-    // GiphyAdapter.Listener
-    // =============================================================================================
+    protected void cache(GIPHY response) {
 
-    @Override
-    public void onSelected(String url) {
-        Intent data = new Intent();
-        data.putExtra(GiphyLibrary.GIPHY_URL, url);
-        setResult(RESULT_OK, data);
-        finish();
+        for (Gif gif: response.getData()) {
+            Glide.with(getContext())
+                    .load(gif.images.fixed_height_small.url)
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                            .centerCrop())
+                    .transition(DrawableTransitionOptions.withCrossFade());
+        }
     }
 }

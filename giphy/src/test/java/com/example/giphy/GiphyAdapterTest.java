@@ -1,10 +1,7 @@
-package com.example.giphy.adapters;
+package com.example.giphy;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-
-import com.example.giphy.models.GIPHY;
+import com.example.giphy.GiphyAdapter;
+import com.example.giphy.GIPHY;
 
 import org.junit.Before;
 import org.junit.Test;

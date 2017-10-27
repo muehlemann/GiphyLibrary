@@ -1,4 +1,4 @@
-package com.example.giphy.builders;
+package com.example.giphy;
 
 import java.io.IOException;
 
@@ -10,8 +10,8 @@ import okhttp3.Response;
 
 /**
  * Created by muehlemann on 10/25/17.
+ *
  */
-
 public class ChainBuilder {
 
     private Request mRequest;

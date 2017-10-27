@@ -1,4 +1,4 @@
-package com.example.giphy.helper;
+package com.example.giphy;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;

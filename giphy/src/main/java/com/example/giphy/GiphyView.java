@@ -1,4 +1,4 @@
-package com.example.giphy.views;
+package com.example.giphy;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
@@ -9,17 +9,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.giphy.R;
-import com.example.giphy.models.GiphyImage;
 
-/**
- * Created by muehlemann on 10/16/17.
- *
- */
-public class GiphyView extends RecyclerView.ViewHolder {
+class GiphyView extends RecyclerView.ViewHolder {
 
-    protected Context context;
-    protected AppCompatImageView imageView;
+    Context context;
+    AppCompatImageView imageView;
 
     // =============================================================================================
     // Constructor
@@ -36,12 +30,12 @@ public class GiphyView extends RecyclerView.ViewHolder {
     // Methods
     // =============================================================================================
 
-    public void loadGif(GiphyImage giphyImage) {
+    public void loadGif(Gif gif) {
 
         Glide.with(context)
-                .load(giphyImage.fixed_height.url)
+                .load(gif.getUrlSmall())
                 .apply(new RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .placeholder(R.drawable.ic_placeholder)
                         .error(R.drawable.ic_error)
                         .centerCrop())
