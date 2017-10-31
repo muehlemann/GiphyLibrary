@@ -3,7 +3,7 @@
 Created on Oct. 7th, 2017 by Matt Muehlemann
 
 ## Screenshots
-> screenshots comming soon
+(https://user-images.githubusercontent.com/4277927/32250950-0ff669d8-be65-11e7-9e71-b5cd02ee1178.png)
 
 ## Dependency
 Add dependency to build.gradle of your app
@@ -15,6 +15,13 @@ dependencies {
 ```
 
 ## Usage
+Add the GiphyLibrary activity to your projects android manifest
+```xml
+    <activity 
+        android:name="com.muehlemann.giphy.GiphyActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+```
+
 Create a GiphyLibrary object in your activity.
 ```java
 GiphyLibrary giphyLibrary = new GiphyLibrary();
