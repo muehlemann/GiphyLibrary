@@ -3,7 +3,7 @@
 Created on Oct. 7th, 2017 by Matt Muehlemann
 
 ## Screenshots
-![GiphyLibrary](https://user-images.githubusercontent.com/4277927/32250950-0ff669d8-be65-11e7-9e71-b5cd02ee1178.png)
+![GiphyLibrary](https://user-images.githubusercontent.com/4277927/32251016-7f6da556-be65-11e7-8bfa-03877cd24c70.png)
 
 ## Dependency
 Add dependency to build.gradle of your app
