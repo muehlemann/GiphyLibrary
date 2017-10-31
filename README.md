@@ -25,24 +25,22 @@ To start the GiphyLibrary picker call:
     giphyLib.start(context, listener, API_KEY);
 ```
 
-Then delegate the activity result to the giphy library
-```java
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        giphyLib.onActivityResult(requestCode, resultCode, data);
-    }
-```
-
-And your activity implement GiphyLibrary.Listener
+Then delegate the onActivityResult to the GiphyLibrary object and implement the GiphyLibrary listener.
 ```java
 public class MainActivity implements GiphyLibrary.Listener {
         
     ...
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        giphyLib.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onGiphySelected(String url) {
         Glide.with(MainActivity.this).load(url).into(imageView);
     }
+
 }
 ```
