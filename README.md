@@ -17,12 +17,12 @@ dependencies {
 ## Usage
 Create a GiphyLibrary object in your activity.
 ```java
-    GiphyLibrary giphyLibrary = new GiphyLibrary();
+GiphyLibrary giphyLibrary = new GiphyLibrary();
 ```
 
 To start the GiphyLibrary picker call:
 ```java
-    giphyLib.start(context, listener, API_KEY);
+giphyLibrary.start(context, listener, API_KEY);
 ```
 
 Then delegate the onActivityResult to the GiphyLibrary object and implement the GiphyLibrary listener.
@@ -34,7 +34,7 @@ public class MainActivity implements GiphyLibrary.Listener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        giphyLib.onActivityResult(requestCode, resultCode, data);
+        giphyLibrary.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -44,3 +44,6 @@ public class MainActivity implements GiphyLibrary.Listener {
 
 }
 ```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
