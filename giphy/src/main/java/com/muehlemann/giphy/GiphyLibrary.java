@@ -1,6 +1,8 @@
 package com.muehlemann.giphy;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
@@ -26,16 +28,16 @@ public class GiphyLibrary extends AppCompatActivity {
     // =============================================================================================
 
     public void start(Activity activity, Listener listener, String apiKey) {
-
         this.listener = listener;
+        activity.startActivityForResult(buildIntent(activity, apiKey), REQUEST_CODE);
+    }
 
-        Intent intent = new Intent(activity, GiphyActivity.class);
-        intent.putExtra(API_KEY, apiKey);
-        activity.startActivityForResult(intent, REQUEST_CODE);
+    public void start(Fragment fragment, Listener listener, String apiKey) {
+        this.listener = listener;
+        fragment.startActivityForResult(buildIntent(fragment.getActivity(), apiKey), REQUEST_CODE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case GiphyLibrary.REQUEST_CODE:
@@ -47,6 +49,16 @@ public class GiphyLibrary extends AppCompatActivity {
                     break;
             }
         }
-
     }
+
+    // =============================================================================================
+    // Helpers
+    // =============================================================================================
+
+    private Intent buildIntent(Context context, String apiKey) {
+        Intent intent = new Intent(context, GiphyActivity.class);
+        intent.putExtra(API_KEY, apiKey);
+        return intent;
+    }
+
 }
